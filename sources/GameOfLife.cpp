@@ -14,7 +14,6 @@ void drawGrid(int binaryArray[NBCELLROW][NBCELLCOLUMN], sf::RenderWindow &window
     {
         for (int j = 0; j < NBCELLCOLUMN; j++)
         {
-
             sf::RectangleShape cell(sf::Vector2f(17.f, 17.f));
             cell.setOutlineThickness(1.f);
             cell.setOutlineColor(sf::Color::Black);
