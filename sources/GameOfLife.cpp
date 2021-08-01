@@ -4,7 +4,7 @@
 * @brief display the menu
 * @param window - the window where we display the menu
 */
-void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButton, sf::Text& startText, sf::RoundedRectangleShape& stopButton, sf::Text& stopText, sf::RoundedRectangleShape& clearButton, sf::Text& clearText, sf::RoundedRectangleShape& randomButton, sf::Text& randomText, sf::Text& scoreValueText)
+void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButton, sf::RoundedRectangleShape& stopButton, sf::RoundedRectangleShape& clearButton, sf::RoundedRectangleShape& randomButton, sf::Text& scoreValueText, sf::RoundedRectangleShape& minusDelayButton, sf::RoundedRectangleShape& plusDelayButton, sf::Text& delayValueText)
 {
     sf::Vector2u size = window.getSize();
     unsigned int width = size.x;
@@ -18,7 +18,10 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     sf::Font font;
     if (!font.loadFromFile("ressources/GoogleSans-Bold.ttf"))
     {
-        std::cerr << "ERROR font loading !" << std::endl;
+        if (!font.loadFromFile("GoogleSans-Bold.ttf"))
+        {
+            std::cerr << "ERROR font loading !" << std::endl;
+        }
     }
 
     // Score text
@@ -40,6 +43,7 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     startButton.setPosition(sf::Vector2f(width - 185, 100));
 
     // Start button text
+    sf::Text startText;
     startText.setFont(font);
     startText.setString("Start");
     startText.setCharacterSize(24);
@@ -51,6 +55,7 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     stopButton.setPosition(sf::Vector2f(width - 185, 160));
 
     // Stop button text
+    sf::Text stopText;
     stopText.setFont(font);
     stopText.setString("Stop");
     stopText.setCharacterSize(24);
@@ -62,6 +67,7 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     clearButton.setPosition(sf::Vector2f(width - 185, 220));
 
     // Clear button text
+    sf::Text clearText;
     clearText.setFont(font);
     clearText.setString("Clear");
     clearText.setCharacterSize(24);
@@ -73,12 +79,49 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     randomButton.setPosition(sf::Vector2f(width - 185, 280));
 
     // Random button text
+    sf::Text randomText;
     randomText.setFont(font);
     randomText.setString("Random");
     randomText.setCharacterSize(24);
     randomText.setPosition(sf::Vector2f(width - 147, 285));
 
-    // Random button text
+    // Delay text
+    sf::Text delayText;
+    delayText.setFont(font);
+    delayText.setString("Delay : ");
+    delayText.setCharacterSize(24);
+    delayText.setPosition(sf::Vector2f(width - 185, height - 250));
+
+    // Delay value text
+    delayValueText.setFont(font);
+    delayValueText.setCharacterSize(24);
+    delayValueText.setPosition(sf::Vector2f(width - 100, height - 250));
+
+    // Minus delay button
+    minusDelayButton.setOutlineThickness(3.f);
+    minusDelayButton.setOutlineColor(sf::Color::White);
+    minusDelayButton.setPosition(sf::Vector2f(width - 185, 400));
+
+    // Minus delay button text
+    sf::Text minusDelayText;
+    minusDelayText.setFont(font);
+    minusDelayText.setString("-");
+    minusDelayText.setCharacterSize(24);
+    minusDelayText.setPosition(sf::Vector2f(width - 152, 405));
+
+    // Plus delay button
+    plusDelayButton.setOutlineThickness(3.f);
+    plusDelayButton.setOutlineColor(sf::Color::White);
+    plusDelayButton.setPosition(sf::Vector2f(width - 95, 400));
+
+    // Plus delay button text
+    sf::Text plusDelayText;
+    plusDelayText.setFont(font);
+    plusDelayText.setString("+");
+    plusDelayText.setCharacterSize(24);
+    plusDelayText.setPosition(sf::Vector2f(width - 63, 405));
+
+    // Credits text
     sf::Text creditsText;
     creditsText.setFont(font);
     creditsText.setString("Credits: Sullivan Leboeuf");
@@ -96,6 +139,13 @@ void displayMenu(sf::RenderWindow& window, sf::RoundedRectangleShape& startButto
     window.draw(clearText);
     window.draw(randomButton);
     window.draw(randomText);
+    window.draw(delayText);
+    window.draw(delayValueText);
+    window.draw(creditsText);
+    window.draw(minusDelayButton);
+    window.draw(minusDelayText);
+    window.draw(plusDelayButton);
+    window.draw(plusDelayText);
     window.draw(creditsText);
 }
 
@@ -183,7 +233,7 @@ int countLivingCell(int binaryArray[NBCELLROW][NBCELLCOLUMN], int row, int colum
 * @param binaryArray - contain the grid
 * @param isGameLaunched - true if the game is launched, false otherwise
 */
-void playStop(int binaryArray[NBCELLROW][NBCELLCOLUMN], bool isGameLaunched, int& counter)
+void playStop(int binaryArray[NBCELLROW][NBCELLCOLUMN], bool isGameLaunched, int& counter, int& delay)
 {
     if (isGameLaunched)
     {
@@ -219,7 +269,7 @@ void playStop(int binaryArray[NBCELLROW][NBCELLCOLUMN], bool isGameLaunched, int
                 }
             }
         }
-        sf::sleep(sf::milliseconds(250));
+        sf::sleep(sf::milliseconds(delay));
     }
 }
 
@@ -261,29 +311,28 @@ void randomize(int binaryArray[NBCELLROW][NBCELLCOLUMN])
 void launchGOF(sf::RenderWindow& window)
 {
     sf::RoundedRectangleShape startButton(sf::Vector2f(170.f, 40.f), 10.f, 50);
-    sf::Text startText;
     sf::RoundedRectangleShape stopButton(sf::Vector2f(170.f, 40.f), 10.f, 50);
-    sf::Text stopText;
     sf::RoundedRectangleShape clearButton(sf::Vector2f(170.f, 40.f), 10.f, 50);
-    sf::Text clearText;
     sf::RoundedRectangleShape randomButton(sf::Vector2f(170.f, 40.f), 10.f, 50);
-    sf::Text randomText;
+    sf::RoundedRectangleShape minusDelayButton(sf::Vector2f(80.f, 40.f), 10.f, 50);
+    sf::RoundedRectangleShape plusDelayButton(sf::Vector2f(80.f, 40.f), 10.f, 50);
+    
+    sf::Text delayText;
+    delayText.setString("250");
 
     sf::Text scoreValueText;
     scoreValueText.setString("0");
 
     startButton.setFillColor(sf::Color::Blue);
-    startText.setFillColor(sf::Color::White);
     stopButton.setFillColor(sf::Color::Blue);
-    stopText.setFillColor(sf::Color::White);
     clearButton.setFillColor(sf::Color::Blue);
-    clearText.setFillColor(sf::Color::White);
     randomButton.setFillColor(sf::Color::Blue);
-    randomText.setFillColor(sf::Color::White);
-    scoreValueText.setFillColor(sf::Color::White);
+    minusDelayButton.setFillColor(sf::Color::Blue);
+    plusDelayButton.setFillColor(sf::Color::Blue);
 
     bool isGameLaunched = false;
     int counter = 0;
+    int delay = 250;
 
     // fill the binary array with zero
     int binaryArray[NBCELLROW][NBCELLCOLUMN];
@@ -346,15 +395,37 @@ void launchGOF(sf::RenderWindow& window)
                             randomize(binaryArray);
                         }
                     }
+
+                    // if minusDelayButton is clicked
+                    if (event.mouseButton.x >= minusDelayButton.getPosition().x && event.mouseButton.x <= minusDelayButton.getPosition().x + minusDelayButton.getLocalBounds().width)
+                    {
+                        if (event.mouseButton.y >= minusDelayButton.getPosition().y && event.mouseButton.y <= minusDelayButton.getPosition().y + minusDelayButton.getLocalBounds().height)
+                        {
+                            if (delay > 1) delay -= (delay / 2);
+                        }
+                    }
+
+                    // if plusDelayButton is clicked
+                    if (event.mouseButton.x >= plusDelayButton.getPosition().x && event.mouseButton.x <= plusDelayButton.getPosition().x + plusDelayButton.getLocalBounds().width)
+                    {
+                        if (event.mouseButton.y >= plusDelayButton.getPosition().y && event.mouseButton.y <= plusDelayButton.getPosition().y + plusDelayButton.getLocalBounds().height)
+                        {
+                            if (delay > 1) delay += (delay / 2);
+                            else delay += 1;
+                        }
+                    }
                 }
             }
         }
 
         scoreValueText.setString(std::to_string(counter));
 
-        playStop(binaryArray, isGameLaunched, counter);
+        if (delay > 1000) delayText.setString(std::to_string(delay/1000) + " s");
+        else delayText.setString(std::to_string(delay) + " ms");
+
+        playStop(binaryArray, isGameLaunched, counter, delay);
         window.clear();
-        displayMenu(window, startButton, startText, stopButton, stopText, clearButton, clearText, randomButton, randomText, scoreValueText);
+        displayMenu(window, startButton, stopButton, clearButton, randomButton, scoreValueText, minusDelayButton, plusDelayButton, delayText);
         drawGrid(binaryArray, window);
         window.display();
     }
