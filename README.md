@@ -14,8 +14,8 @@ At each stage, the evolution of a cell is entirely determined by the state of it
 
 # How do it works ?
 
-Click on each cell that you want to make alive or just click on the random button.
-Then you can click the Start button to begin de progression beside that you can also change the delay between two state.
-And stop the progression by clicking on the stop button.
+- Click on each cell that you want to make alive or just click on the random button.
+- Then you can click the Start button to begin de progression beside that you can also change the delay between two state.
+- And stop the progression by clicking on the stop button.
 
 Simple as that :)
