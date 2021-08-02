@@ -9,3 +9,13 @@ At each stage, the evolution of a cell is entirely determined by the state of it
 
 - a dead cell with exactly three living neighbors becomes alive (it is born);
 - a living cell with two or three living neighbors stays alive, otherwise it dies.
+
+![gameOfLife](https://user-images.githubusercontent.com/39437369/127913214-9403c8ae-ab69-42f5-9853-1a0306e330c6.PNG)
+
+# How do it works ?
+
+Click on each cell that you want to make alive or just click on the random button.
+Then you can click the Start button to begin de progression beside that you can also change the delay between two state.
+And stop the progression by clicking on the stop button.
+
+Simple as that :)
